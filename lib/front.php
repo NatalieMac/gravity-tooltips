@@ -39,19 +39,11 @@ class GF_Tooltips_Front
 	 */
 	public function scripts_styles( $form, $is_ajax ) {
 
-		// Set our filename based on debug.
-		$file   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'hint.css' : 'hint.min.css';
+		// Load CSS for toggletips
+		wp_enqueue_style( 'gf-tooltips', plugins_url( '/css/toggletip.css', __FILE__ ), array(), '2.0.0', 'all' );
 
-		// Optional filter of file location (for using CDN or whatnot).
-		$file   = apply_filters( 'gf_tooltips_css_url', plugins_url( '/css/' . $file, __FILE__ ) );
-
-		// Bail if it isn't there anymore.
-		if ( empty( $file ) ) {
-			return;
-		}
-
-		// Now call the actual file.
-		wp_enqueue_style( 'gf-tooltips', esc_url( $file ), array(), '2.0.0', 'all' );
+		// Load JS for toggletips
+		wp_enqueue_script( 'gf-tooltips', plugins_url('/js/toggletip.js', __FILE__), array( 'jquery' ), '2.0.0', true );
 	}
 
 	/**
@@ -166,7 +158,7 @@ class GF_Tooltips_Front
 			$icon   = self::get_tooltip_icon();
 
 			// Build the markup.
-			$setup  = '<span class="gf-icon ' . $class . '" data-hint="' . esc_attr( $text ) . '">' . $icon . '</span>';
+			$setup = '<span class="toggletip-container"><button type="button" data-toggletip-content="' . esc_attr( $text ) . '"><span aria-hidden="true">i</span><span class="screen-reader-text">More info</span></button><span role="status"></span></span>';
 
 			// Determine what to attach to, since sections get handled differently due to markup differences.
 			$attach = 'section' === $field->type ? '</h2>' : '</label>';
